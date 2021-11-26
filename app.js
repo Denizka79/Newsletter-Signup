@@ -30,11 +30,25 @@ app.post("/", function(req, res){
     }
     var request = https.request(url, options, function(response) {
         response.on("data", function(data) {
-            console.log(JSON.parse(data));
+            //console.log(JSON.parse(data));
+            var resultResponse = JSON.parse(data);
+            var statusCode = resultResponse.status;
+            console.log(statusCode);
+            if (statusCode === "subscribed") {
+                //res.write("<p>Success!</p>");
+                res.sendFile(__dirname + "/success.html");
+            } else {
+                //res.write("<p>Sorry. Something went wrong...</p>");
+                res.sendFile(__dirname + "/failure.html");
+            }
         });
     });
     request.write(jsonData);
     request.end();
+});
+
+app.post("/failure", function(req, res) {
+    res.redirect("/");
 });
 
 app.listen(3000, function() {
